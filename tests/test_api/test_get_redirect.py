@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from tests.url_factory import UrlFactory
+from tests.factories.url_factory import UrlFactory
 
 
 @pytest.mark.django_db
@@ -28,10 +28,10 @@ def test_get_redirect_returns_302_when_short_found(client, django_assert_num_que
     assert response.headers["location"] == url_object.url
 
 
-@pytest.mark.parametrize("method", ("POST", "DELETE", "PUT", "PATCH"))
-def test_only_get_method_is_allowed_for_get_redirect(method, client):
+@pytest.mark.parametrize("http_method", ("POST", "DELETE", "PUT", "PATCH"))
+def test_only_get_method_is_allowed_for_get_redirect(http_method, client):
     url = reverse("get_redirect", kwargs={"short": "notexisting"})
 
-    response = client.generic(method, url)
+    response = client.generic(http_method, url)
 
     assert response.status_code == 405

@@ -19,6 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
+SECRET_KEY = os.environ["DJANGO_SECRET"]
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -27,18 +29,11 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-DJANGO_APPS = [
-    "django.contrib.contenttypes",
-    "django.contrib.auth"
-]
+DJANGO_APPS = ["django.contrib.contenttypes", "django.contrib.auth"]
 
-THIRD_PARTY_APPS = [
-    "rest_framework"
-]
+THIRD_PARTY_APPS = ["rest_framework"]
 
-CUSTOM_APPS = [
-    "url_shortener_app"
-]
+CUSTOM_APPS = ["url_shortener_app"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
