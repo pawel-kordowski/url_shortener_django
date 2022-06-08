@@ -1,12 +1,27 @@
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models
 
+from url_shortener_app.cache import get_url_cache_key
+from url_shortener_app.exceptions import UrlNotFound
 from url_shortener_app.random_string_generator import RandomStringGenerator
 
 
 class UrlQuerySet(models.QuerySet):
     def get_orig_url_by_short(self, short: str) -> str:
-        return self.values("url").get(short=short)["url"]
+        cache_key = get_url_cache_key(short)
+        value_from_cache = cache.get(cache_key)
+        if value_from_cache:
+            return value_from_cache
+        if value_from_cache == "":
+            raise UrlNotFound
+        try:
+            value_from_db = self.values("url").get(short=short)["url"]
+        except Url.DoesNotExist:
+            cache.set(cache_key, "", timeout=None)
+            raise UrlNotFound
+        cache.set(cache_key, value_from_db, timeout=None)
+        return value_from_db
 
     def get_not_used_short(self) -> str:
         short_length = settings.SHORT_URL_MIN_LENGTH
@@ -30,4 +45,6 @@ class Url(models.Model):
     def save(self, *args, **kwargs):
         if not self.short:
             self.short = Url.objects.get_not_used_short()
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+        cache.set(get_url_cache_key(self.short), self.url)

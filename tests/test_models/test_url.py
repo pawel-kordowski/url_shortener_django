@@ -4,6 +4,7 @@ import pytest
 from django.conf import settings
 
 from tests.factories.url_factory import UrlFactory
+from url_shortener_app.exceptions import UrlNotFound
 from url_shortener_app.models import Url
 
 pytestmark = pytest.mark.django_db
@@ -18,7 +19,7 @@ def test_url_get_orig_url_by_short_returns_url_when_found():
 
 
 def test_url_get_orig_url_by_short_raises_exception_when_not_found():
-    with pytest.raises(Url.DoesNotExist):
+    with pytest.raises(UrlNotFound):
         Url.objects.get_orig_url_by_short(short="not_existing")
 
 
