@@ -19,9 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-3e^@$$)1pfk1ewnz03@!)f=#4oj^au%mls)297uzi0$njkqxzi"
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -30,7 +27,20 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = ["url_shortener_app"]
+DJANGO_APPS = [
+    "django.contrib.contenttypes",
+    "django.contrib.auth"
+]
+
+THIRD_PARTY_APPS = [
+    "rest_framework"
+]
+
+CUSTOM_APPS = [
+    "url_shortener_app"
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -102,3 +112,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+SHORT_URL_MIN_LENGTH = 5
