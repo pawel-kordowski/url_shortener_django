@@ -11,7 +11,9 @@ def test_create_url_successful(django_assert_num_queries, client):
     full_url = "http://google.com"
 
     with django_assert_num_queries(2):
-        response = client.post(url, data={"url": full_url})
+        response = client.post(
+            url, data={"url": full_url}, content_type="application/json"
+        )
 
     assert response.status_code == 201
     all_urls_from_db = Url.objects.all()
@@ -25,17 +27,33 @@ def test_create_url_successful(django_assert_num_queries, client):
 
 
 def test_create_url_requires_url(client):
-    response = client.post(url)
+    response = client.post(url, content_type="application/json")
 
     assert response.status_code == 400
     assert response.json() == {"url": ["This field is required."]}
 
 
 def test_create_url_validates_url(client):
-    response = client.post(url, data={"url": "not-valid-url"})
+    response = client.post(
+        url, data={"url": "not-valid-url"}, content_type="application/json"
+    )
 
     assert response.status_code == 400
     assert response.json() == {"url": ["Enter a valid URL."]}
+
+
+def test_create_url_does_not_accept_empty_string(client):
+    response = client.post(url, data={"url": ""}, content_type="application/json")
+
+    assert response.status_code == 400
+    assert response.json() == {"url": ["This field may not be blank."]}
+
+
+def test_create_url_does_not_accept_null_value(client):
+    response = client.post(url, data={"url": None}, content_type="application/json")
+
+    assert response.status_code == 400
+    assert response.json() == {"url": ["This field may not be null."]}
 
 
 @pytest.mark.parametrize("http_method", ("GET", "DELETE", "PATCH", "PUT"))
