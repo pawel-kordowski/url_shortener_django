@@ -53,6 +53,7 @@ $ curl http://localhost:8000/dzltR/ -v
 * PostgreSQL as a database
 * Django as a web framework, ORM, migrations tool and local web server
 * django-rest-framework to implement one of the endpoints
+* redis as a cache layer
 * pytest for unit tests
 * factory-boy for generating database objects in tests
 * poetry to manage python packages
