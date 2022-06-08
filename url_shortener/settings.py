@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["DJANGO_SECRET"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("ENV_TYPE") != "production"
 
 ALLOWED_HOSTS = []
 
@@ -30,6 +30,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 DJANGO_APPS = ["django.contrib.contenttypes", "django.contrib.auth"]
+
+if DEBUG:
+    DJANGO_APPS += ["django.contrib.staticfiles"]
 
 THIRD_PARTY_APPS = ["rest_framework"]
 

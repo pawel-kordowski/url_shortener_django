@@ -1,11 +1,12 @@
 from django.urls import reverse
 from rest_framework import serializers
 
+from url_shortener_app.fields import DefaultSchemaURLField
 from url_shortener_app.models import Url
 
 
 class UrlSerializer(serializers.ModelSerializer):
-    url = serializers.URLField(write_only=True)
+    url = DefaultSchemaURLField(write_only=True)
     orig_url = serializers.URLField(source="url", read_only=True)
     short_url = serializers.SerializerMethodField()
 

@@ -33,27 +33,28 @@ def test_create_url_requires_url(client):
     assert response.json() == {"url": ["This field is required."]}
 
 
-def test_create_url_validates_url(client):
-    response = client.post(
-        url, data={"url": "not-valid-url"}, content_type="application/json"
-    )
+@pytest.mark.parametrize(
+    "orig_url,expected_error_message",
+    (
+        ("invalid-url", "Enter a valid URL."),
+        ("", "This field may not be blank."),
+        (None, "This field may not be null."),
+    ),
+)
+def test_create_url_validates_url(orig_url, expected_error_message, client):
+    response = client.post(url, data={"url": orig_url}, content_type="application/json")
 
     assert response.status_code == 400
-    assert response.json() == {"url": ["Enter a valid URL."]}
+    assert response.json() == {"url": [expected_error_message]}
 
 
-def test_create_url_does_not_accept_empty_string(client):
-    response = client.post(url, data={"url": ""}, content_type="application/json")
+@pytest.mark.django_db
+def test_create_url_accepts_urls_with_no_schema(client):
+    orig_url = "www.google.com"
+    response = client.post(url, data={"url": orig_url}, content_type="application/json")
 
-    assert response.status_code == 400
-    assert response.json() == {"url": ["This field may not be blank."]}
-
-
-def test_create_url_does_not_accept_null_value(client):
-    response = client.post(url, data={"url": None}, content_type="application/json")
-
-    assert response.status_code == 400
-    assert response.json() == {"url": ["This field may not be null."]}
+    assert response.status_code == 201
+    assert response.json()["orig_url"] == f"http://{orig_url}"
 
 
 @pytest.mark.parametrize("http_method", ("GET", "DELETE", "PATCH", "PUT"))
