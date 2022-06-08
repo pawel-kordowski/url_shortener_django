@@ -109,3 +109,4 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SHORT_URL_MIN_LENGTH = 5
+SHORT_URL_CANDIDATES_COUNT = 5

@@ -12,15 +12,15 @@ class UrlQuerySet(models.QuerySet):
 
     def get_not_used_short(self) -> str:
         short_length = settings.SHORT_URL_MIN_LENGTH
-        tries_count = 0
         while True:
-            short = RandomStringGenerator.get_random_string(length=short_length)
-            if not self.filter(short=short).exists():
-                return short
-            tries_count += 1
-            if tries_count == 5:
-                short_length += 1
-                tries_count = 0
+            short_candidates = RandomStringGenerator.get_random_strings(
+                length=short_length, count=settings.SHORT_URL_CANDIDATES_COUNT
+            )
+            taken_shorts = self.in_bulk(short_candidates, field_name="short").keys()
+            not_taken_shorts = short_candidates.difference(taken_shorts)
+            if not_taken_shorts:
+                return not_taken_shorts.pop()
+            short_length += 1
 
 
 class Url(models.Model):
