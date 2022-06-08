@@ -26,7 +26,7 @@ $ curl --request POST 'http://localhost:8000/urls/' \
 ```
 * retrieve url (get redirect) via GET to `/{url}/`
 ```shell
-$ $ curl http://localhost:8000/dzltR/ -v
+$ curl http://localhost:8000/dzltR/ -v
 *   Trying 127.0.0.1...
 * TCP_NODELAY set
 * Connected to localhost (127.0.0.1) port 8000 (#0)
@@ -52,7 +52,9 @@ $ $ curl http://localhost:8000/dzltR/ -v
 ### tech stack
 * PostgreSQL as a database
 * Django as a web framework, ORM, migrations tool and local web server
+* django-rest-framework to implement one of the endpoints
 * pytest for unit tests
+* factory-boy for generating database objects in tests
 * poetry to manage python packages
 * docker and docker-compose to create local environment
 * black, flake8 and isort to keep code quality
