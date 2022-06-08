@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/code
     entrypoint: ./utils/app-entrypoint.sh
-    command: python url_shortener/manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
   db:
     image: postgres:14.3-alpine3.16
     env_file:
