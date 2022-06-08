@@ -9,17 +9,17 @@ from url_shortener_app.models import Url
 pytestmark = pytest.mark.django_db
 
 
-def test_url_get_by_short_returns_object_when_found():
+def test_url_get_orig_url_by_short_returns_url_when_found():
     url = UrlFactory()
 
-    url_from_db = Url.objects.get_by_short(short=url.short)
+    orig_url = Url.objects.get_orig_url_by_short(short=url.short)
 
-    assert url_from_db == url
+    assert orig_url == url.url
 
 
-def test_url_get_by_short_raises_exception_when_not_found():
+def test_url_get_orig_url_by_short_raises_exception_when_not_found():
     with pytest.raises(Url.DoesNotExist):
-        Url.objects.get_by_short(short="not_existing")
+        Url.objects.get_orig_url_by_short(short="not_existing")
 
 
 @patch("url_shortener_app.models.RandomStringGenerator.get_random_strings")

@@ -7,8 +7,8 @@ from url_shortener_app.random_string_generator import RandomStringGenerator
 
 
 class UrlQuerySet(models.QuerySet):
-    def get_by_short(self, short: str) -> Url:
-        return self.get(short=short)
+    def get_orig_url_by_short(self, short: str) -> str:
+        return self.values("url").get(short=short)["url"]
 
     def get_not_used_short(self) -> str:
         short_length = settings.SHORT_URL_MIN_LENGTH

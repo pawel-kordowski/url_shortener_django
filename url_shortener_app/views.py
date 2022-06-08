@@ -8,7 +8,7 @@ from url_shortener_app.models import Url
 @require_GET
 def get_redirect(request, short: str):
     try:
-        url = Url.objects.get_by_short(short=short)
+        orig_url = Url.objects.get_orig_url_by_short(short=short)
     except Url.DoesNotExist:
         raise Http404()
-    return redirect(url.url)
+    return redirect(orig_url)
